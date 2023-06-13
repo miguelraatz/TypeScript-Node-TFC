@@ -11,7 +11,7 @@ class SequelizeTeams extends Model<InferAttributes<SequelizeTeams>,
 InferCreationAttributes<SequelizeTeams>> {
   declare id: CreationOptional<number>;
 
-  declare team_name: string;
+  declare teamName: string;
 }
 
 SequelizeTeams.init({
@@ -21,14 +21,15 @@ SequelizeTeams.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  team_name: {
+  teamName: {
     type: DataTypes.STRING(15),
     allowNull: false,
     unique: true,
-  }
+  },
 }, {
   sequelize: db,
   modelName: 'teams',
+  underscored: true,
   timestamps: false,
 });
 
