@@ -15,7 +15,7 @@ export default class TeamModel implements ITeamModel {
 
   public async findById(numberId: ITeam['id']): Promise<ITeam | null> {
     const team = await this.model.findByPk(numberId);
-    if (team === null) return null;
+    if (team == null) return null;
 
     const { id, teamName }: ITeam = team;
     return { id, teamName };

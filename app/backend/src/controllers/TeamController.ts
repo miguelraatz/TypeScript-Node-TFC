@@ -15,6 +15,9 @@ export default class TeamController {
     const { id } = req.params;
     const serviceResponse = await this.teamService.getTeamById(Number(id));
     const statusCode = mapStatusHTTP(serviceResponse.status);
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      return res.status(statusCode).json(serviceResponse.data);
+    }
     return res.status(statusCode).json(serviceResponse.data);
   }
 }
