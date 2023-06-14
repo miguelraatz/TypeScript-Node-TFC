@@ -1,5 +1,5 @@
 import { Identifiable } from '..';
 
-export default interface ITeams extends Identifiable {
+export default interface ITeam extends Identifiable {
   teamName: string;
 }

@@ -22,7 +22,7 @@ SequelizeTeams.init({
     autoIncrement: true,
   },
   teamName: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING(50),
     allowNull: false,
     unique: true,
   },
