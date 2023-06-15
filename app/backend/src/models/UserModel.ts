@@ -1,7 +1,8 @@
 import IUser from '../interfaces/users/IUser';
 import SequelizeUsers from '../database/models/SequelizeUsers';
+import { IUserModel } from '../interfaces/users/IUserModel';
 
-export default class UserModel {
+export default class UserModel implements IUserModel {
   private model = SequelizeUsers;
 
   public async findByEmail(email: string): Promise<IUser | null> {

@@ -11,7 +11,11 @@ export default class TokenGeneratorJwt implements TokenGenerator {
   };
 
   generate(user: IUser): string {
-    const token = this.jwt.sign({ id: user.id }, this.secret, this.jwtConfig);
+    const token = this.jwt.sign({ id: user.id, role: user.role }, this.secret, this.jwtConfig);
     return token;
+  }
+
+  verifyToken(token: string): jwt.JwtPayload {
+    return this.jwt.verify(token, this.secret) as jwt.JwtPayload;
   }
 }
