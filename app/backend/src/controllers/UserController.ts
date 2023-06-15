@@ -17,8 +17,8 @@ export default class UserController {
     return res.status(200).json(serviceResponse.data);
   }
 
-  static getUser(req: Request, res: Response): Promise<Response> {
+  static getRoleUser(req: Request, res: Response) {
     const { role } = req.body.verifyToken;
-    return res.status(200).json({ role }) as unknown as Promise<Response>;
+    return res.status(200).json({ role });
   }
 }
