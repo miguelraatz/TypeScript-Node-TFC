@@ -1,3 +1,4 @@
+import { NewEntity } from '..';
 import IMatch from './IMatch';
 
 export type IMatchModel = {
@@ -6,4 +7,5 @@ export type IMatchModel = {
   finishMatch(id: number): Promise<void>;
   updateMatch(id: number, homeTeamGoals: number, awayTeamGoals: number)
   : Promise<void>;
+  createMatch(match: IMatch): Promise<NewEntity<IMatch>>;
 };

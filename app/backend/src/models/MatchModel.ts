@@ -49,4 +49,19 @@ export default class MatchModel implements IMatchModel {
       { where: { id, inProgress: true }, returning: true },
     );
   }
+
+  public async createMatch(match: IMatch): Promise<IMatch> {
+    const newMatch = {
+      homeTeamId: match.homeTeamId,
+      homeTeamGoals: match.homeTeamGoals,
+      awayTeamId: match.awayTeamId,
+      awayTeamGoals: match.awayTeamGoals,
+    };
+
+    const createdMatch = await this.model.create({
+      ...newMatch,
+      inProgress: true,
+    });
+    return createdMatch;
+  }
 }
