@@ -37,4 +37,16 @@ export default class MatchModel implements IMatchModel {
       { where: { id }, returning: true },
     );
   }
+
+  public async updateMatch(id: number, homeTeamGoals: number, awayTeamGoals: number)
+    : Promise<void> {
+    const newGoals = {
+      homeTeamGoals,
+      awayTeamGoals,
+    };
+    await this.model.update(
+      newGoals,
+      { where: { id, inProgress: true }, returning: true },
+    );
+  }
 }
