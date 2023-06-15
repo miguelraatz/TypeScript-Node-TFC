@@ -4,9 +4,11 @@ import MatchService from '../services/MatchService';
 import MatchController from '../controllers/MatchController';
 import ValidateToken from '../middlewares/ValidateToken';
 import TokenGeneratorJwt from '../services/TokenGeneratorJwt';
+import TeamModel from '../models/TeamModel';
 
 const matchModel = new MatchModel();
-const matchService = new MatchService(matchModel);
+const teamModel = new TeamModel();
+const matchService = new MatchService(matchModel, teamModel);
 const matchController = new MatchController(matchService);
 const tokenGenerator = new TokenGeneratorJwt();
 const validateToken = new ValidateToken(tokenGenerator);
