@@ -12,6 +12,8 @@ import {
   loginWithInvalidEmail,
   loginWithInvalidPassword,
   loginWithDataCorrect,
+  loginWithIncorrectEmail,
+  loginWithIncorrectPassword,
 } from './mocks/login.mocks';
 
 import * as bcrypt from 'bcryptjs';
@@ -48,5 +50,19 @@ describe('testing route /login', () => {
   it('should return status 401 when trying to login with invalid email', async () => {
     const { status } = await chai.request(app).post('/login').send(loginWithInvalidEmail);
     expect(status).to.be.equal(401);
+    sinon.restore();
   });
+  it('should return status 401 when trying to login with incorrect email', async () => {
+    sinon.stub(SequelizeUsers, 'findOne').resolves();
+    sinon.stub(bcrypt, 'compare').resolves();
+    const { status } = await chai.request(app).post('/login').send(loginWithIncorrectEmail);
+    expect(status).to.be.equal(401);
+    // sinon.restore();
+  });
+  // it('should return status 401 when trying to login with incorrect password', async () => {
+  //   sinon.stub(SequelizeUsers, 'findOne').resolves(loginWithDataCorrect as SequelizeUsers);
+  //   sinon.stub(bcrypt, 'compare').resolves(loginWithIncorrectPassword.password);
+  //   const { status } = await chai.request(app).post('/login').send(loginWithIncorrectPassword);
+  //   expect(status).to.be.equal(401);
+  // });
 });
