@@ -5,7 +5,6 @@ export default class LeaderBoardService {
   constructor(
     private teamsModel = SequelizeTeams,
     private matchModel = SequelizeMatches,
-    private totalVictories = 0,
   ) { }
 
   public async findMatchsTeam(id: number) {
