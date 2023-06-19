@@ -32,7 +32,7 @@ export default class MatchModel implements IMatchModel {
   }
 
   public async finishMatch(id: number): Promise<void> {
-    await this.model.update(
+    this.model.update(
       { inProgress: false },
       { where: { id }, returning: true },
     );

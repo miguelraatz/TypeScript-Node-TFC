@@ -23,6 +23,10 @@ export default class MatchController {
   public async finishMatch(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
     const serviceResponse = await this.matchService.finishMatch(Number(id));
+    if (serviceResponse.status !== 'SUCCESSFUL') {
+      const statusCode = mapStatusHTTP(serviceResponse.status);
+      return res.status(statusCode).json(serviceResponse.data);
+    }
     return res.status(200).json(serviceResponse.data);
   }
 

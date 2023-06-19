@@ -59,7 +59,7 @@ export default class LeaderBoardService {
 
   public async getAllData() {
     const allMatchesNotInProgress = await this.teamsModel.findAll();
-    const result = allMatchesNotInProgress.map(async (team) => {
+    return Promise.all(allMatchesNotInProgress.map(async (team) => {
       const name = team.teamName;
       const [totalGames] = await this.totalGames(team.id);
       const [totalPoints] = await this.totalPoints(team.id);
@@ -74,8 +74,7 @@ export default class LeaderBoardService {
         totalLosses,
         goalsFavor,
         goalsOwn };
-    });
-    return Promise.all(result);
+    }));
   }
 
   public async leaderBoardHome() {
