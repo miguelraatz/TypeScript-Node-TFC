@@ -5,6 +5,14 @@ const leaderBoardController = new LeaderBoardController();
 
 const router = Router();
 
-router.get('/', (req: Request, res: Response) => leaderBoardController.leaderBoardHome(req, res));
+router.get(
+  '/home',
+  (req: Request, res: Response) => leaderBoardController.leaderBoardHome(req, res),
+);
+
+router.get(
+  '/away',
+  (req: Request, res: Response) => leaderBoardController.leaderBoardHome(req, res),
+);
 
 export default router;

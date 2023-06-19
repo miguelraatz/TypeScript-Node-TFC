@@ -9,49 +9,50 @@ export default class LeaderBoardService {
     private matchModel = SequelizeMatches,
   ) { }
 
-  public async findMatchsTeam(id: number) {
+  public async findMatchsTeam(id: number, isHome: string) {
+    if (isHome === 'home') {
+      const matchsHomeTeam = await this.matchModel.findAll({
+        where: { inProgress: false, homeTeamId: id },
+      });
+      return matchsHomeTeam;
+    }
     const matchsHomeTeam = await this.matchModel.findAll({
-      where: { inProgress: false, homeTeamId: id },
+      where: { inProgress: false, awayTeamId: id },
     });
     return matchsHomeTeam;
   }
 
-  public async totalGames(id: number): Promise<number[]> {
-    const matches = await this.findMatchsTeam(id);
-    return [matches.length];
-  }
-
-  public async totalPoints(id: number): Promise<number[]> {
-    const matches = await this.findMatchsTeam(id);
-    let acc = 0;
-    matches.map((match) => {
-      if (match.homeTeamGoals > match.awayTeamGoals) acc += 3;
-      if (match.homeTeamGoals > match.awayTeamGoals) acc += 0;
-      if (match.homeTeamGoals === match.awayTeamGoals) acc += 1;
-      return acc;
-    });
-    return [acc];
-  }
-
-  public async totalVDL(id: number): Promise<number[]> {
-    const matches = await this.findMatchsTeam(id);
+  public async totalPointsGamesAndVDL(id: number, isHome: string): Promise<number[]> {
+    const matches = await this.findMatchsTeam(id, isHome);
     let vic = 0;
     let draw = 0;
     let loss = 0;
     matches.map((match) => {
-      if (match.homeTeamGoals > match.awayTeamGoals) vic += 1;
+      if (isHome === 'away') {
+        if (match.awayTeamGoals > match.homeTeamGoals) vic += 1;
+        if (match.awayTeamGoals < match.homeTeamGoals) loss += 1;
+        if (match.awayTeamGoals === match.homeTeamGoals) draw += 1;
+        return 0;
+      } if (match.homeTeamGoals > match.awayTeamGoals) vic += 1;
       if (match.homeTeamGoals < match.awayTeamGoals) loss += 1;
       if (match.homeTeamGoals === match.awayTeamGoals) draw += 1;
-      return vic;
+      return 0;
     });
-    return [vic, draw, loss];
+    const totalPoints = vic * 3 + draw;
+    const totalGames = vic + draw + loss;
+    return [totalGames, totalPoints, vic, draw, loss];
   }
 
-  public async totalGoals(id: number): Promise<number[]> {
-    const matches = await this.findMatchsTeam(id);
+  public async totalGoals(id: number, isHome: string): Promise<number[]> {
+    const matches = await this.findMatchsTeam(id, isHome);
     let goalsFavor = 0;
     let goalsOwn = 0;
     matches.map((match) => {
+      if (isHome === 'away') {
+        goalsFavor += match.awayTeamGoals;
+        goalsOwn += match.homeTeamGoals;
+        return goalsFavor;
+      }
       goalsFavor += match.homeTeamGoals;
       goalsOwn += match.awayTeamGoals;
       return goalsFavor;
@@ -59,14 +60,13 @@ export default class LeaderBoardService {
     return [goalsFavor, goalsOwn];
   }
 
-  public async getAllData() {
+  public async getAllData(isHome: string) {
     const allMatchesNotInProgress = await this.teamsModel.findAll();
     return Promise.all(allMatchesNotInProgress.map(async (team) => {
       const name = team.teamName;
-      const [totalGames] = await this.totalGames(team.id);
-      const [totalPoints] = await this.totalPoints(team.id);
-      const [totalVictories, totalDraws, totalLosses] = await this.totalVDL(team.id);
-      const [goalsFavor, goalsOwn] = await this.totalGoals(team.id);
+      const [totalGames, totalPoints, totalVictories, totalDraws,
+        totalLosses] = await this.totalPointsGamesAndVDL(team.id, isHome);
+      const [goalsFavor, goalsOwn] = await this.totalGoals(team.id, isHome);
       return {
         name,
         totalGames,
@@ -80,8 +80,8 @@ export default class LeaderBoardService {
     }));
   }
 
-  public async leaderBoardHome() {
-    const allData = await this.getAllData();
+  public async leaderBoard(isHome: string) {
+    const allData = await this.getAllData(isHome);
     const result = allData.map((team) => ({
       name: team.name,
       totalPoints: team.totalPoints,
@@ -95,6 +95,6 @@ export default class LeaderBoardService {
       efficiency: ((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2),
     }));
     const sorted = sortedResult(result as unknown as ILeaderBoard[]);
-    return sorted;
+    return { status: 'SUCCESSFUL', data: sorted };
   }
 }
