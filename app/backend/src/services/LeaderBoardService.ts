@@ -1,5 +1,7 @@
+import sortedResult from '../utils/sortedLeaderBoard';
 import SequelizeMatches from '../database/models/SequelizeMatches';
 import SequelizeTeams from '../database/models/SequelizeTeams';
+import ILeaderBoard from '../interfaces/leaderboard/ILeaderBoard';
 
 export default class LeaderBoardService {
   constructor(
@@ -38,7 +40,7 @@ export default class LeaderBoardService {
     let loss = 0;
     matches.map((match) => {
       if (match.homeTeamGoals > match.awayTeamGoals) vic += 1;
-      if (match.homeTeamGoals > match.awayTeamGoals) loss += 0;
+      if (match.homeTeamGoals < match.awayTeamGoals) loss += 1;
       if (match.homeTeamGoals === match.awayTeamGoals) draw += 1;
       return vic;
     });
@@ -73,13 +75,14 @@ export default class LeaderBoardService {
         totalDraws,
         totalLosses,
         goalsFavor,
-        goalsOwn };
+        goalsOwn,
+      };
     }));
   }
 
   public async leaderBoardHome() {
     const allData = await this.getAllData();
-    return allData.map((team) => ({
+    const result = allData.map((team) => ({
       name: team.name,
       totalPoints: team.totalPoints,
       totalGames: team.totalGames,
@@ -88,6 +91,10 @@ export default class LeaderBoardService {
       totalLosses: team.totalLosses,
       goalsFavor: team.goalsFavor,
       goalsOwn: team.goalsOwn,
+      goalsBalance: team.goalsFavor - team.goalsOwn,
+      efficiency: ((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2),
     }));
+    const sorted = sortedResult(result as unknown as ILeaderBoard[]);
+    return sorted;
   }
 }
