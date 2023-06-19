@@ -787,3 +787,26 @@ export const matchesInProgress = [
     }
   }
 ]
+
+export const matchInvalid = {
+	homeTeamId: 100,
+	homeTeamGoals: 2,
+	awayTeamId: 150,
+	awayTeamGoals: 50,
+}
+
+export const newMatch = {
+	homeTeamId: 8,
+	homeTeamGoals: 3,
+	awayTeamId: 9,
+	awayTeamGoals: 0,
+}
+
+export const createdMatch = {
+	"id": 51,
+	"homeTeamId": 8,
+	"homeTeamGoals": 3,
+	"awayTeamId": 9,
+	"awayTeamGoals": 0,
+	"inProgress": true
+}
