@@ -7,7 +7,7 @@ export default class LeaderBoardController {
   ) {}
 
   public async leaderBoardHome(req: Request, res: Response): Promise<Response> {
-    const patch = req.baseUrl;
+    const patch = req.originalUrl;
     const isHome = patch.includes('home') ? 'home' : 'away';
     const serviceResponse = await this.leaderBoardService.leaderBoard(isHome);
     return res.status(200).json(serviceResponse.data);
