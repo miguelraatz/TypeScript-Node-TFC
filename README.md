@@ -44,13 +44,13 @@ Obs: Docker e Docker-Compose utilizados no desenvolvimento e execução deste pr
 Clone o projeto:
 
 ```bash
-  git clone git@github.com:miguelraatz/TypeScript-Node-TFC.git
+  git clone git@github.com:miguelraatz/node-TFC.git
 ```
 
 Entre no diretório do projeto:
 
 ```bash
-  cd TypeScript-Node-TFC
+  cd node-TFC
 ```
 
 Suba a orquestração de containers:
